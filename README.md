@@ -44,3 +44,10 @@ source="firewall_traffic.csv" host="scan" index="scanning" sourcetype="scanning_
  | bucket _time span=1h 
 | stats dc(dest_port) as num_dest_port dc(dest_ip) as num_dest_ip by src_ip, _time 
 | where num_dest_port > 1000 OR num_dest_ip > 1000  | stats count
+
+
+
+
+| eval _time = relative_time(_time, "@d")
+| stats count by src_ip
+| search count > 0
