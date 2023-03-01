@@ -51,3 +51,10 @@ source="firewall_traffic.csv" host="scan" index="scanning" sourcetype="scanning_
 | eval _time = relative_time(_time, "@d")
 | stats count by src_ip
 | search count > 0
+
+| bucket _time span=1h 
+| where dest_port!=0 OR dest_ip!=""
+| stats count by src_ip, _time 
+| where count > 1000
+
+
