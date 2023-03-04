@@ -58,3 +58,10 @@ source="firewall_traffic.csv" host="scan" index="scanning" sourcetype="scanning_
 | where count > 1000
 
 
+
+| eval _time = relative_time(_time, "@d")
+| multireport [ | stats count by src_ip | eval type="bysrc"]
+[ | stats count by dest_ip | eval type="bydest"] [ | stats count by dest_port | eval type="byport"] 
+[ | stats count(eval(action="blocked")) as blocks by _time | eval type="blocksbytime"]
+| search type=byport | sort - count | fields - type | table dest_port count
+
