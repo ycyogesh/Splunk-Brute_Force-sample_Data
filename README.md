@@ -81,3 +81,6 @@ source="firewall_traffic.csv" host="scan" index="scanning" sourcetype="scanning_
 
 
 | where bytes_out>300000 | where 2 * bytes_out > bytes_in | stats count sum(bytes_*) as bytes_* by src_ip | sort - bytes_out
+
+
+| where bytes_out>300000 | where 2 * bytes_out > bytes_in | stats count sum(bytes_*) as bytes_* by src_ip | stats sum(count) as Number_File_Uploads
