@@ -76,3 +76,8 @@ source="firewall_traffic.csv" host="scan" index="scanning" sourcetype="scanning_
 
 
 | eval _time = relative_time(_time, "@d") | multireport [ | stats count by src_ip | eval type="bysrc"] [ | stats count by dest_ip | eval type="bydest"] [ | stats count by dest_port | eval type="byport"] [ | stats count(eval(action="blocked")) as blocks by _time | eval type="blocksbytime"] | search type=blocksbytime | timechart span=1d values(blocks) as blocks | search blocks=*
+
+
+
+
+| where bytes_out>300000 | where 2 * bytes_out > bytes_in | stats count sum(bytes_*) as bytes_* by src_ip | sort - bytes_out
